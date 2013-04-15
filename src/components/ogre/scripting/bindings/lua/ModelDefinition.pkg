@@ -1,0 +1,380 @@
+namespace Ember {
+namespace OgreView {
+namespace Model {
+
+typedef std::vector<Ember::OgreView::Model::SubModelDefinition*> SubModelDefinitionsStore;
+typedef std::vector<Ember::OgreView::Model::PartDefinition*> PartDefinitionsStore;
+typedef std::vector<Ember::OgreView::Model::SubEntityDefinition*> SubEntityDefinitionsStore;
+typedef std::vector<Ember::OgreView::Model::AttachPointDefinition> AttachPointDefinitionStore;
+typedef std::map<std::string, Ember::OgreView::Model::ViewDefinition*> ViewDefinitionStore;
+
+
+/**
+A simple struct for defining a certain view of the Model. These settings needs to be applied to the camera rendering the Model.
+*/
+struct ViewDefinition
+{
+	/**
+	The name of the view.
+	*/
+	std::string Name;
+	
+	/**
+	The rotation of the camera related to the Model.
+	*/
+	Ogre::Quaternion Rotation;
+	
+	/**
+	The distance of the camera from the Model.
+	*/
+	float Distance;
+};
+
+struct PoseDefinition
+{
+	PoseDefinition();
+	~PoseDefinition();
+
+	/**
+	 * @brief The rotation of the model around the translated origin.
+	 */
+	Ogre::Quaternion Rotate;
+
+	/**
+	 * @brief The translation of the original model, to provide a new origin.
+	 */
+	Ogre::Vector3 Translate;
+	
+	/**
+	 * @brief If true, the orientation and translation of the entity will be ignored.
+	 */
+	bool IgnoreEntityData;
+	
+};
+
+struct AttachPointDefinition
+{
+	std::string Name;
+	std::string BoneName;
+	std::string Pose;
+	Ogre::Quaternion Rotation;
+	Ogre::Vector3 Translation;
+};
+
+
+class SubEntityDefinition
+{
+	 std::string& getSubEntityName() ;
+	//void setSubEntityName( std::string&);
+	unsigned int getSubEntityIndex() ;
+
+	 std::string& getMaterialName() ;
+	void setMaterialName( std::string& materialName);
+	Ember::OgreView::Model::PartDefinition& getPartDefinition();
+
+};	
+
+
+class PartDefinition
+{
+	void setName( std::string& name);
+	 std::string& getName() ;
+	
+	void setShow(bool show);
+	bool getShow() ;
+	
+	Ember::OgreView::Model::SubEntityDefinition* createSubEntityDefinition(std::string& subEntityName);
+	Ember::OgreView::Model::SubEntityDefinition* createSubEntityDefinition(unsigned int subEntityIndex);
+	std::vector<Ember::OgreView::Model::SubEntityDefinition*> getSubEntityDefinitions();
+	void removeSubEntityDefinition(Ember::OgreView::Model::SubEntityDefinition* def);
+	Ember::OgreView::Model::SubModelDefinition& getSubModelDefinition();
+	
+};
+
+
+class SubModelDefinition
+{
+	
+	 std::string& getMeshName() ;
+	
+	Ember::OgreView::Model::PartDefinition* createPartDefinition( std::string& partname);
+	std::vector<Ember::OgreView::Model::PartDefinition*> getPartDefinitions();
+	void removePartDefinition(Ember::OgreView::Model::PartDefinition* def);
+	Ember::OgreView::Model::ModelDefinition& getModelDefinition();
+};
+
+/**
+ * @brief Definition of an animation part.
+ *
+ * An animation is comprised of many animation parts, where each part refers to an Ogre::Animation.
+ * When the animation is played, the different parts are blended together.
+ *
+ * In addition, each part can have a weight attached to it which determines how much it should be blended.
+ */
+struct AnimationPartDefinition
+{
+	std::string Name;
+
+	/**
+	 * @brief The bone groups, if any, which should affect this animation.
+	 */
+	std::vector<Ember::OgreView::Model::BoneGroupRefDefinition> BoneGroupRefs;
+
+};
+
+/**
+ * @brief A definition of a bone group.
+ *
+ * A bone group is used to define blend weights to bones, so that different animations can be used together.
+ * A typical example would be of one animation which only affects a human character's hands, and another animation which only affects the legs.
+ * To make these blend together one would have to add bone groups where one the bones affecting the arms are added to one group, and the bones affecting the legs added to the other group.
+ */
+struct BoneGroupDefinition
+{
+	/**
+	 * @brief The name of the group.
+	 */
+	std::string Name;
+
+	/**
+	 * @brief The bones which are affected by the group, specified through their indices.
+	 */
+	std::vector<size_t> Bones;
+
+};
+
+/**
+ * @brief Definition of a sound to play for a certain action.
+ */
+struct SoundDefinition
+{
+	std::string groupName;
+	unsigned int playOrder;
+};
+
+/**
+ * @brief A reference to a bone group, with an optional weight.
+ */
+struct BoneGroupRefDefinition {
+	std::string Name;
+	float Weight;
+};
+/**
+ * @brief A definition of an animation.
+ *
+ * Each animation is made up of one or many "animation parts" which mainly refers to which instances of Ogre::Animation to play.
+ *
+ * In addition, each animation can be specified to iterate a certain number of times.
+ */
+class AnimationDefinition
+{
+public:
+	Ember::OgreView::Model::AnimationPartDefinition* createAnimationPartDefinition(const std::string& ogreAnimationName);
+	const std::vector<Ember::OgreView::Model::AnimationPartDefinition*>& getAnimationPartDefinitions() const;
+	void removeAnimationPartDefinition(Ember::OgreView::Model::AnimationPartDefinition* def);
+
+	int getIterations() const;
+	void setIterations(int iterations);
+};
+
+class ActionDefinition
+{
+public:
+	Ember::OgreView::Model::AnimationDefinition* createAnimationDefinition(int iterations = 1);
+	std::vector<Ember::OgreView::Model::AnimationDefinition*>& getAnimationDefinitions();
+	void removeAnimationDefinition(Ember::OgreView::Model::AnimationDefinition* def);
+
+	Ember::OgreView::Model::SoundDefinition* createSoundDefinition(const std::string& groupName, unsigned int play);
+	std::vector<Ember::OgreView::Model::SoundDefinition*>& getSoundDefinitions() const;
+	void removeSoundDefinition(Ember::OgreView::Model::SoundDefinition* def);
+
+	Ember::OgreView::Model::ActivationDefinition* createActivationDefinition(const Ember::OgreView::Model::ActivationDefinition::Type& type, const std::string& trigger);
+	std::vector<Ember::OgreView::Model::ActivationDefinition*>& getActivationDefinitions();
+	void removeActivationDefinition(Ember::OgreView::Model::ActivationDefinition* def);
+
+	const std::string& getName() const;
+	float getAnimationSpeed() const;
+	void setAnimationSpeed(float speed);
+
+};
+
+
+
+class ModelDefinition : public Ogre::Resource {
+
+	/**
+	whether to use a certain axis for scaling
+	for example, if you use a model of a human you probably want to scale according to the height
+	this might mean that width and depths aren't correct though
+	*/
+	enum UseScaleOf {
+		MODEL_ALL = 0,
+		MODEL_NONE = 1,
+		MODEL_WIDTH = 2,
+		MODEL_DEPTH = 3,
+		MODEL_HEIGHT = 4
+		
+	};
+
+	/**
+	A struct for simple bindings between areas and materials/textures.
+	*/
+//	struct AreaDefinition
+//	{
+//		int Id;
+//		std::string TextureName;
+//		std::string MaterialName;
+//	};
+	
+ 
+    bool isValid(void);
+	void setValid(bool valid);
+
+	
+	/**
+	 *    Gets the amount of scale that needs to be applied to derived Models.
+	 * @return 
+	 */
+	inline float getScale();
+	inline void setScale(float scale);
+	
+	/**
+	 *    Gets how derived Models needs to be scaled.
+	 Defaults to "ALL"
+	 * @return 
+	 */
+	inline  Ember::OgreView::Model::ModelDefinition::UseScaleOf getUseScaleOf();
+	inline void setUseScaleOf( Ember::OgreView::Model::ModelDefinition::UseScaleOf useScale);
+	
+	/**
+	 *    Gets an optional translation vector which should be applied to derived Models.
+	 * @return 
+	 */
+	 Ogre::Vector3& getTranslate();
+	void setTranslate(const Ogre::Vector3 translate);
+	
+	/**
+	 *	Whether contained entities should be shown or not.
+	 Defaults to true.
+	 * @return true if contained entities should be shown, else false
+	 */
+	bool getShowContained() const;
+	void setShowContained(bool show);
+	
+	/**
+	 *    Returns a vector defining how much, if ever, contained entities should be offset.
+	 *    If they shouldn't, Ogre::Vector3::ZERO will be returned.
+	 * @return A offset vectorl.
+	 */
+	const Ogre::Vector3& getContentOffset() const;
+	void setContentOffset(const Ogre::Vector3&);
+	
+	/**
+	 *    Accessor for the rotation around the Z-axis that should be applied to the model upon creation
+	 NOTE: this should probably be replaced with a Quaternion
+	 * @return 
+	 */
+	const Ogre::Quaternion& getRotation() const;
+	void setRotation(const Ogre::Quaternion rotation);
+	
+	Ember::OgreView::Model::SubModelDefinition* createSubModelDefinition(std::string& meshname);
+	std::vector<Ember::OgreView::Model::SubModelDefinition*>& getSubModelDefinitions();
+	void removeSubModelDefinition(Ember::OgreView::Model::SubModelDefinition* def);
+	
+	Ember::OgreView::Model::ActionDefinition* createActionDefinition(std::string& actionname);
+	std::vector<Ember::OgreView::Model::ActionDefinition*>& getActionDefinitions();
+	void removeActionDefinition(Ember::OgreView::Model::ActionDefinition* def);
+	
+	const std::vector<Ember::OgreView::Model::AttachPointDefinition>& getAttachPointsDefinitions();
+
+	/**
+	 * @brief Adds a new attach point definition.
+	 *
+	 * If an definition with the same name already exists it will be updated. Else a new entry will be added.
+	 *
+	 * @param definition The new definition.
+	 */
+	void addAttachPointDefinition(const Ember::OgreView::Model::AttachPointDefinition& definition);
+	
+	/**
+	Creates and returns a new ViewDefinition with the supplied name.
+	@param viewname The name of the view
+	@return A pointer to the new view.
+	*/
+	Ember::OgreView::Model::ViewDefinition* createViewDefinition(const std::string& viewname);
+	
+	/**
+	 * Returns all views defined.
+	 * @return 
+	 */
+	const Ember::OgreView::Model::ViewDefinitionStore& getViewDefinitions();
+	
+	/**
+	 * Removed a named view. If no view can be found, no exception will be thrown.
+	 * @param name The name of the view to to remove.
+	 */
+	void removeViewDefinition(const std::string name);
+	
+	
+	const Ember::OgreView::Model::PoseDefinitionStore& getPoseDefinitions() const;
+
+	void addPoseDefinition(const std::string& name, const Ember::OgreView::Model::PoseDefinition& definition);
+
+	void removePoseDefinition(const std::string& name);
+	
+	
+	/**
+	 *    Reloads all the Model instances that uses this definition.
+	 */
+	void reloadAllInstances();
+
+	
+};
+
+class ModelDefinitionPtr
+{
+	virtual ~ModelDefinitionPtr();
+	Ember::OgreView::Model::ModelDefinition* get();
+};
+
+class PoseDefinitionStore
+{
+class value_type {
+	const std::string& first;
+	const Ember::OgreView::Model::PoseDefinition& second;
+};
+
+$#define __operator_ptr operator*
+$#define __operator_pp operator++
+
+class const_iterator {
+public:
+    value_type& __operator_ptr @ get();
+	Ember::OgreView::Model::PoseDefinitionStore::const_iterator& __operator_pp @ next();
+	bool operator==(const Ember::OgreView::Model::PoseDefinitionStore::const_iterator& value);
+};
+public:
+	Ember::OgreView::Model::PoseDefinitionStore::const_iterator begin() const;
+	Ember::OgreView::Model::PoseDefinitionStore::const_iterator end @ theEnd() const;  // end is keyword in Lua
+};
+
+
+}
+}
+}
+
+// Iterator over GUIAdaptersStore
+$[
+function Ember.OgreView.Model.PoseDefinitionStore:pairs()
+  local I = self:begin()
+  local Iend = self:theEnd()
+  return function()
+    if I ~= Iend then
+      local val = I:get()
+      I = I:next()
+      return val.first, val.second
+    end
+  end
+end
+$]
+

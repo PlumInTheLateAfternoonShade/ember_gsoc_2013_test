@@ -1,0 +1,46 @@
+#!/bin/sh -eu
+
+: ${bindir:="$( cd -P "$( dirname "$0" )" && pwd )"}
+: ${prefix:="$( cd -P "$( dirname "$0" )/.." && pwd )"}
+
+homedata="$HOME/.ember"
+
+debugging=0
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  --home)
+    shift
+    homedata="$1"
+    ;;
+  --debug)
+    debugging=1
+    ;;
+  --help)
+    echo "--debug       - start in debugger (requires that 'gdb' is installed)"
+    exec $bindir/ember.bin --help >&2
+    exit 1
+  esac
+  shift
+done
+
+# Rely on built-in paths for installed binaries.
+if [ "$prefix" != "@prefix@" ]; then
+  prefix_arg="--prefix $prefix"
+  export LD_LIBRARY_PATH=$prefix/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+else
+  prefix_arg=
+fi
+
+cd $bindir
+
+if [ $debugging = 1 ] ; then
+  # Execute real ember binary
+  echo "Starting Ember in debugger...."
+  gdb --batch -ex "run" -ex "backtrace" -ex "quit" \
+  --args $bindir/ember.bin $prefix_arg --home $homedata "$@"
+else
+  # Execute real ember binary
+  echo "Starting Ember...."
+  exec $bindir/ember.bin $prefix_arg --home $homedata "$@"
+fi

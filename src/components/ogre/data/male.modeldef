@@ -1,0 +1,210 @@
+<models>
+    <model name="male" usescaleof="height" showcontained="false" icon="">
+        <translate x="0" y="0" z="0" />
+        <rotation x="1" y="0" z="0" degrees="0" />
+        <submodels>
+            <submodel mesh="3d_skeletons/bipeds/races/human/male/male.mesh">
+                <parts>
+                    <part name="bare_torso" group="torso" show="true">
+                        <subentities>
+                            <subentity index="1" material="/global/bipeds/races/human/male/body/base" />
+                            <subentity index="7" material="/global/bipeds/races/human/male/body/base" />
+                            <subentity index="11" material="/global/bipeds/races/human/male/body/base" />
+                        </subentities>
+                    </part>
+                    <part name="bare_legs" group="legs" show="true">
+                        <subentities>
+                            <subentity index="0" material="/global/bipeds/races/human/male/body/base" />
+                            <subentity index="9" material="/global/bipeds/races/human/male/body/base" />
+                            <subentity index="12" material="/global/bipeds/races/human/male/body/base" />
+                        </subentities>
+                    </part>
+                    <part name="bare_feet" group="feet" show="true">
+                        <subentities>
+                            <subentity index="3" material="/global/bipeds/races/human/male/body/base" />
+                        </subentities>
+                    </part>
+                    <part name="bare_head" group="head" show="true">
+                        <subentities>
+                            <subentity index="6" material="/global/bipeds/races/human/male/head/middle_aged" />
+                        </subentities>
+                    </part>
+                    <part name="bare_arms" group="arms" show="false">
+                        <subentities>
+                            <subentity index="8" material="/global/bipeds/races/human/male/body/base" />
+                            <subentity index="10" material="/global/bipeds/races/human/male/body/base" />
+                            <subentity index="4" material="/global/bipeds/races/human/male/body/base" />
+                        </subentities>
+                    </part>
+                    <part name="bare_hands" show="true">
+                        <subentities>
+                            <subentity index="5" material="/global/bipeds/races/human/male/body/base" />
+                        </subentities>
+                    </part>
+                    <part name="eyes/blue" group="eyes" show="true">
+                        <subentities>
+                            <subentity index="2" material="/global/characters/universal/eyes/blue" />
+                        </subentities>
+                    </part>
+                    <part name="eyes/green" group="eyes" show="false">
+                        <subentities>
+                            <subentity index="2" material="/global/characters/universal/eyes/green" />
+                        </subentities>
+                    </part>
+                    <part name="eyes/brown" group="eyes" show="false">
+                        <subentities>
+                            <subentity index="2" material="/global/characters/universal/eyes/brown" />
+                        </subentities>
+                    </part>
+                    <part name="eyes/hazel" group="eyes" show="false">
+                        <subentities>
+                            <subentity index="2" material="/global/characters/universal/eyes/hazel" />
+                        </subentities>
+                    </part>
+                </parts>
+            </submodel>
+            <submodel mesh="3d_skeletons/bipeds/races/human/male/attire/drystan_archer/drystan_archer.mesh">
+                <parts>
+                    <part name="footwear" group="feet" show="true">
+                        <subentities>
+                            <subentity index="0" material="/global/bipeds/races/human/male/attire/drystan_archer/footwear" />
+                        </subentities>
+                    </part>
+                    <part name="pants" group="legs" show="true">
+                        <subentities>
+                            <subentity index="1" material="/global/bipeds/races/human/male/attire/drystan_archer/pants" />
+                        </subentities>
+                    </part>
+                    <part name="shirt" group="torso" show="true">
+                        <subentities>
+                            <subentity index="2" material="/global/bipeds/races/human/male/attire/drystan_archer/shirt" />
+                        </subentities>
+                    </part>
+                </parts>
+            </submodel>
+        </submodels>
+        <actions>
+            <action name="__movement_idle" speed="1">
+                <activations>
+                    <activation type="movement">idle</activation>
+                </activations>
+                <animations>
+                    <animation iterations="6">
+                        <animationpart name="idle" />
+                    </animation>
+                    <animation iterations="1">
+                        <animationpart name="gstr_fidgeting" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="__movement_walk" speed="1">
+                <activations>
+                    <activation type="movement">walk</activation>
+                    <activation type="movement">swim</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="trns_walk" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="__movement_run" speed="2">
+                <activations>
+                    <activation type="movement">run</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="trns_walk" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="eat" speed="1">
+                <activations>
+                    <activation type="action">eat</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="gstr_eat" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="pickup" speed="1">
+                <activations>
+                    <activation type="action">pickup</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="gstr_pickup" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="dig" speed="1">
+                <activations>
+                    <activation type="action">dig</activation>
+                    <activation type="task">cultivate</activation>
+                    <activation type="task">delve</activation>
+                    <activation type="task">dig</activation>
+                    <activation type="task">heaping</activation>
+                    <activation type="task">trailblaze</activation>
+                    <activation type="task">trenching</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="work_dig" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="chop" speed="1">
+                <activations>
+                    <activation type="action">chop</activation>
+                    <activation type="action">cut</activation>
+                    <activation type="task">logging</activation>
+                    <activation type="task">bisect</activation>
+                    <activation type="task">destroying</activation>
+                    <activation type="task">sharpen</activation>
+                    <activation type="task">slaughter</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="work_chop" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="attack" speed="1">
+                <activations>
+                    <activation type="action">attack</activation>
+                    <activation type="action">punch</activation>
+                    <activation type="task">combat</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="ofns_punch" />
+                    </animation>
+                </animations>
+            </action>
+            <action name="fidgeting" speed="1">
+                <activations>
+                    <activation type="task">sift</activation>
+                </activations>
+                <animations>
+                    <animation iterations="1">
+                        <animationpart name="gstr_fidgeting" />
+                    </animation>
+                </animations>
+            </action>
+        </actions>
+        <attachpoints>
+            <attachpoint name="outfit.right_hand" bone="RMiddleRoot" pose="gripped">
+                <rotation x="-0.611592" y="0.0177145" z="-0.790975" degrees="178.84" />
+                <translation x="0.00683594" y="0.0338541" z="-0.0146484" />
+            </attachpoint>
+            <attachpoint name="right_hand_wield" bone="RMiddleRoot" pose="gripped">
+                <rotation x="-0.187958" y="-0.584878" z="-0.789043" degrees="191.173" />
+                <translation x="0.00683594" y="0.0338541" z="-0.0146484" />
+            </attachpoint>
+        </attachpoints>
+        <views />
+        <lights />
+        <bonegroups />
+    </model>
+</models>

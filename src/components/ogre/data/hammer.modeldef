@@ -1,0 +1,24 @@
+<models>
+    <model name="hammer" usescaleof="width" showcontained="true" icon="3d_objects/items/tools/textures/hammer/I.png">
+        <translate x="0" y="0" z="0" />
+        <rotation x="1" y="-0" z="-0" degrees="270" />
+        <submodels>
+            <submodel mesh="3d_objects/items/tools/models/hammer/hammer.mesh">
+                <parts>
+                    <part name="main" show="true" />
+                </parts>
+            </submodel>
+        </submodels>
+        <actions />
+        <attachpoints />
+        <views />
+        <lights />
+        <bonegroups />
+        <poses>
+            <pose name="gripped" ignoreEntityData="true">
+                <translate x="0" y="0" z="0" />
+                <rotate x="-0.57735" y="-0.57735" z="-0.57735" degrees="120" />
+            </pose>
+        </poses>
+    </model>
+</models>
